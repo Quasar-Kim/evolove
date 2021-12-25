@@ -1,15 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import Entity from './Entity.js'
-
-function increase (val, by) {
-  if (val < 0) {
-    return val - by
-  } else if (val > 0) {
-    return val + by
-  } else {
-    return 0
-  }
-}
+// eslint-disable-next-line no-unused-vars
+import Wall from './Wall.js'
 
 /**
  * @param {object} resp
@@ -17,12 +9,14 @@ function increase (val, by) {
  * @param {number} resp.overlapV.x
  * @param {number} resp.overlapV.y
  * @param {Entity} target
+ * @param {Wall} wall
  */
-export default function (resp, target) {
+export default function (resp, target, wall) {
+  // FIX: overlapV 부호 문제로 부호 직접 계산
   const { overlapV } = resp
+  const deltaX = Math.abs(overlapV.x) * wall.normal[0]
+  const deltaY = Math.abs(overlapV.y) * wall.normal[1] * -1
 
-  // debugger
-  
-  target.pos.x -= overlapV.x
-  target.pos.y += overlapV.y
+  target.pos.x += deltaX
+  target.pos.y += deltaY
 }

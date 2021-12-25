@@ -9,21 +9,46 @@ const engine = new Engine(
   document.querySelector('#collisionBodies'),
   [
     [[Wall, Bug], (resp, wall, bug) => {
-      negate(resp, bug)
+      negate(resp, bug, wall)
       bug.reflect(wall.normal)
     }]
   ]
 )
 
 // entity creation
-const topWall = new Wall({
-  x: 0,
-  y: 0,
-  orientation: 'horizontal',
-  thickness: 10,
-  normal: [0, -1]
-})
-engine.addEntity(topWall)
+const walls = {
+  top: new Wall({
+    x: 0,
+    y: 0,
+    orientation: 'horizontal',
+    thickness: 50,
+    normal: [0, -1]
+  }),
+  bottom: new Wall({
+    x: 0,
+    y: window.innerHeight - 50,
+    orientation: 'horizontal',
+    thickness: 50,
+    normal: [0, 1]
+  }),
+  left: new Wall({
+    x: 0,
+    y: 0,
+    orientation: 'vertical',
+    thickness: 50,
+    normal: [1, 0]
+  }),
+  right: new Wall({
+    x: window.innerWidth - 50,
+    y: 0,
+    orientation: 'vertical',
+    thickness: 50,
+    normal: [-1, 0]
+  })
+}
+for (const [, v] of Object.entries(walls)) {
+  engine.addEntity(v)
+}
 
 const bug = new Bug({
   x: 50,
