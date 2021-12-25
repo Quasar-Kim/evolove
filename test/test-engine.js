@@ -1,15 +1,15 @@
-import Engine from './src/Engine.js'
-import Wall from './src/Wall.js'
-import Bug from './src/Bug.js'
+import Engine from '../src/Engine.js'
+import Wall from '../src/Wall.js'
+import Bug from '../src/Bug.js'
 import AlertDialog from 'https://cdn.jsdelivr.net/npm/elix@15.0.1/define/AlertDialog.js'
-import negate from './src/negate.js'
+import negate from '../src/negate.js'
 import { rotate } from 'mathjs'
 
 const engine = new Engine(
   document.querySelector('#collisionBodies'),
   [
     [[Wall, Bug], (resp, wall, bug) => {
-      negate(resp, wall)
+      negate(resp, bug)
       bug.reflect(wall.normal)
     }]
   ]
@@ -31,7 +31,7 @@ const bug = new Bug({
   width: 50,
   height: 50,
   velocity: rotate([1, 0], Math.PI / 6),
-  bodyAngle: Math.PI / 4
+  bodyAngle: Math.PI / 3
 })
 engine.addEntity(bug)
 
