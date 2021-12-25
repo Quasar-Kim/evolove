@@ -32,15 +32,35 @@ function devour (resp, weak, strong, game) {
   }
 }
 
+let foods = 0
+
 const engine = new Engine(
   document.querySelector('#collisionBodies'),
   [
     [[Wall, PreyBug], preventEscape],
     [[Wall, PredatorBug], preventEscape],
-    [[Food, PreyBug], devour],
+    [[Food, PreyBug], (...args) => {
+      devour(...args)
+      foods--
+    }],
     [[PreyBug, PredatorBug], devour]
   ]
 )
+
+// generate food
+// let frameCount = 0
+engine.tickFunctions.add(game => {
+  // frameCount++
+  // if (frameCount % 5 !== 0) return
+  if (foods > 10000) return
+
+  const food = new Food(
+    random(20, window.innerWidth - 20),
+    random(20, window.innerHeight - 20)
+  )
+  game.addEntity(food)
+  foods++
+})
 
 // entity creation
 const walls = {
@@ -98,19 +118,6 @@ const predator = new PredatorBug({
   activity: 0.3
 })
 engine.addEntity(predator)
-
-// generate food
-let foods = 0
-engine.tickFunctions.add(game => {
-  if (foods > 200) return
-
-  const food = new Food(
-    random(20, window.innerWidth - 20),
-    random(20, window.innerHeight - 20)
-  )
-  game.addEntity(food)
-  foods++
-})
 
 // show dialog
 const dialog = new AlertDialog()
