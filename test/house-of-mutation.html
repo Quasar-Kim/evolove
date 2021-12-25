@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    html,
+body {
+  margin: 0;
+  height: 100vh;
+}
+
+.prey {
+  margin: 50px;
+  background-color: black;
+  color: white;
+
+}
+  </style>
+
+<!-- https://generator.jspm.io/#DcrRDcJACABQPuocTnCktDX+soQDkB5aGrxLhLqBe9vfl/cbAC7XR0tL1wpVU9csa3e3sN6CZySc4WmuJeSrH55wxBu85IgwaUx4AnivElvR4AXpjhPBW3Lbg2k8O/0BidFlzmYA -->
+  <script type="importmap">
+    {
+      "imports": {
+        "detect-collisions": "https://ga.jspm.io/npm:detect-collisions@3.1.3/dist/index.js",
+        "file-saver": "https://ga.jspm.io/npm:file-saver@2.0.5/dist/FileSaver.min.js",
+        "gaussian": "https://ga.jspm.io/npm:gaussian@1.2.0/lib/gaussian.js",
+        "lodash-es": "https://ga.jspm.io/npm:lodash-es@4.17.21/lodash.js",
+        "mathjs": "https://ga.jspm.io/npm:mathjs@10.0.1/lib/esm/index.js"
+      },
+      "scopes": {
+        "https://ga.jspm.io/": {
+          "@babel/runtime/helpers/defineProperty": "https://ga.jspm.io/npm:@babel/runtime@7.16.5/helpers/esm/defineProperty.js",
+          "@babel/runtime/helpers/extends": "https://ga.jspm.io/npm:@babel/runtime@7.16.5/helpers/esm/extends.js",
+          "complex.js": "https://ga.jspm.io/npm:complex.js@2.0.15/complex.js",
+          "crypto": "https://ga.jspm.io/npm:@jspm/core@2.0.0-beta.13/nodelibs/browser/crypto.js",
+          "decimal.js": "https://ga.jspm.io/npm:decimal.js@10.3.1/decimal.js",
+          "escape-latex": "https://ga.jspm.io/npm:escape-latex@1.2.0/dist/index.js",
+          "fraction.js": "https://ga.jspm.io/npm:fraction.js@4.1.2/fraction.js",
+          "javascript-natural-sort": "https://ga.jspm.io/npm:javascript-natural-sort@0.7.1/naturalSort.js",
+          "rbush": "https://ga.jspm.io/npm:rbush@3.0.1/rbush.min.js",
+          "sat": "https://ga.jspm.io/npm:sat@0.9.0/SAT.js",
+          "seedrandom": "https://ga.jspm.io/npm:seedrandom@3.0.5/index.js",
+          "tiny-emitter": "https://ga.jspm.io/npm:tiny-emitter@2.1.0/index.js",
+          "typed-function": "https://ga.jspm.io/npm:typed-function@2.0.0/typed-function.js"
+        }
+      }
+    }
+  </script>
+</head>
+<body>
+<button id="nextBtn">next generation</button>
+<p>generation: <span id="generation"></span></p>
+<p>bugs: <span id="bugCount"></span></p>
+<p>go to generation 20: <button id="forward">go!</button></p>
+
+<script src="house-of-mutation.js" type="module"></script>
+</body>
+</html>

@@ -28,18 +28,14 @@ export default class Entity extends Box {
   constructor (props) {
     super({ x: props.x, y: props.y }, props.width, props.height)
 
-    /**
-     * 변이의 대상이 되는 특성들
-     */
     this.props = {
       width: props.width,
       height: props.height,
-      bodyAngle: props.bodyAngle,
       velocity: props.velocity
     }
 
     // body angle 적용
-    this.setBodyAngle(this.props.bodyAngle)
+    this.setBodyAngle(props.bodyAngle)
 
     /**
      * frame since creation
@@ -82,8 +78,10 @@ export default class Entity extends Box {
    * @param {CanvasRenderingContext2D} ctx
    */
   draw (ctx) {
+    ctx.beginPath()
     super.draw(ctx)
     this.drawVelocity(ctx)
+    ctx.stroke()
   }
 
   /**
@@ -107,6 +105,7 @@ export default class Entity extends Box {
   setBodyAngle (angle) {
     // 먼저 왼쪽 위 기준으로 회전
     super.setAngle(-angle)
+    this.bodyAngle = angle
 
     // 무게중심을 처음과 일치하도록 회전시키기
     // NOTE: 아래 모든 좌표는 왼쪽 위 점 기준 상대좌표
@@ -127,6 +126,11 @@ export default class Entity extends Box {
 
   setAngle (angle) {
     this.setBodyAngle(angle)
+    this.setVelocityAngle(angle)
+  }
+
+  rotate (angle) {
+    this.setBodyAngle(this.bodyAngle + angle)
     this.setVelocityAngle(angle)
   }
 

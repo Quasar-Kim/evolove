@@ -22,20 +22,53 @@ export default class Engine {
    * @param {[[Function, Function], CollisionCallback][]} collisionRules
    */
   constructor (canvas, collisionRules) {
-    // 클래스별 엔티티들
-    /** @type {Map<Function, Set<Entity>} */
+    /**
+     * 클래스별 엔티티들
+     * @type {Map<Function, Set<Entity>}
+     */
     this.entities = new Map()
+
+    /**
+     * 충돌 계
+     * @type {System}
+     */
     this.system = new System()
-    /** @type {Map<[Function, Function], CollisionCallback>}  */
+
+    /**
+     * @type {Map<[Function, Function], CollisionCallback>}
+     */
     this.collisionRules = new Map(collisionRules)
-    // requestAnimationFrame의 결과
-    /** @type {number}  */
+
+    /**
+     * requestAnimationFrame의 결과
+     * @type {number}
+     */
     this.handle = -1
-    /** @type {CanvasRenderingContext2D} */
+
+    /**
+     * 렌더링이 이루어질 캔버스 2d 컨텍스트
+     * @type {CanvasRenderingContext2D}
+     */
     this.ctx = canvas.getContext('2d')
+
+    /**
+     * Tick당 호출할 함수들
+     */
+    this.tickFunctions = new Set()
 
     // 캔버스 설정 - 팬 색
     this.ctx.strokeStyle = 'blue'
+
+    // 충돌 룰에 나온 엔티티 종류들 모두 map에 추가
+    for (const [[EntityClassA, EntityClassB]] of collisionRules) {
+      if (!this.entities.has(EntityClassA)) {
+        this.entities.set(EntityClassA, new Set())
+      }
+
+      if (!this.entities.has(EntityClassB)) {
+        this.entities.set(EntityClassB, new Set())
+      }
+    }
   }
 
   /**
@@ -56,9 +89,15 @@ export default class Engine {
    */
   deleteEntity (entity) {
     this.entities.get(entity.constructor).delete(entity)
+    this.system.remove(entity)
+    entity.delete(this)
   }
 
   _tick () {
+    for (const fn of this.tickFunctions) {
+      fn(this)
+    }
+
     // 엔티티별 업데이트
     for (const entities of this.entities.values()) {
       for (const entity of entities) {
@@ -84,13 +123,6 @@ export default class Engine {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
     this.ctx.beginPath()
     this.system.draw(this.ctx)
-    this.ctx.stroke()
-    // for (const entities of this.entities.values()) {
-    //   for (const entity of entities) {
-    //     entity.draw(this.ctx)
-    //   }
-    // }
-
     this.handle = requestAnimationFrame(this._tick.bind(this))
   }
 
