@@ -43,6 +43,12 @@ export default class Entity extends Box {
      */
     this.age = 0
     this.create()
+
+    /**
+     * 처음 속도
+     * @type {[number, number]}
+     */
+    this.initialVelocity = this.props.velocity
   }
 
   /**

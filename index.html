@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EvoLove Simulator</title>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "chart.js": "https://ga.jspm.io/npm:chart.js@3.7.0/dist/chart.esm.js",
+        "chart.js/auto": "https://ga.jspm.io/npm:chart.js@3.7.0/auto/auto.esm.js",
+        "detect-collisions": "https://ga.jspm.io/npm:detect-collisions@3.1.3/dist/index.js",
+        "gaussian": "https://ga.jspm.io/npm:gaussian@1.2.0/lib/gaussian.js",
+        "lodash-es": "https://ga.jspm.io/npm:lodash-es@4.17.21/lodash.js",
+        "mathjs": "https://ga.jspm.io/npm:mathjs@10.0.1/lib/esm/index.js",
+        "file-saver": "https://ga.jspm.io/npm:file-saver@2.0.5/dist/FileSaver.min.js"
+      },
+      "scopes": {
+        "https://ga.jspm.io/": {
+          "@babel/runtime/helpers/defineProperty": "https://ga.jspm.io/npm:@babel/runtime@7.16.5/helpers/esm/defineProperty.js",
+          "@babel/runtime/helpers/extends": "https://ga.jspm.io/npm:@babel/runtime@7.16.5/helpers/esm/extends.js",
+          "complex.js": "https://ga.jspm.io/npm:complex.js@2.0.15/complex.js",
+          "crypto": "https://ga.jspm.io/npm:@jspm/core@2.0.0-beta.13/nodelibs/browser/crypto.js",
+          "decimal.js": "https://ga.jspm.io/npm:decimal.js@10.3.1/decimal.js",
+          "escape-latex": "https://ga.jspm.io/npm:escape-latex@1.2.0/dist/index.js",
+          "fraction.js": "https://ga.jspm.io/npm:fraction.js@4.1.2/fraction.js",
+          "javascript-natural-sort": "https://ga.jspm.io/npm:javascript-natural-sort@0.7.1/naturalSort.js",
+          "rbush": "https://ga.jspm.io/npm:rbush@3.0.1/rbush.min.js",
+          "sat": "https://ga.jspm.io/npm:sat@0.9.0/SAT.js",
+          "seedrandom": "https://ga.jspm.io/npm:seedrandom@3.0.5/index.js",
+          "tiny-emitter": "https://ga.jspm.io/npm:tiny-emitter@2.1.0/index.js",
+          "typed-function": "https://ga.jspm.io/npm:typed-function@2.0.0/typed-function.js"
+        }
+      }
+    }
+  </script>
+  <script src="https://esm.run/elix/define/Dialog.js" type="module"></script>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      padding: 1em;
+    }
+
+    em {
+      font-weight: bold;
+      font-style: normal;
+    }
+
+    .setting-inputs {
+      display: flex;
+      flex: auto;
+      justify-content: center;
+      gap: 5em;
+    }
+
+    #submitButton {
+      float: right;
+    }
+
+    textarea {
+      font-family: 'Inconsolata', Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+    }
+
+    .left-panel {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 1em;
+      width: fit-content;
+      border: 1px dotted black;
+    }
+  </style>
+</head>
+<body>
+<!-- 시작 전 설정 오버레이 -->
+<elix-dialog id="configOverlay">
+  <div class="container">
+    <h1>자연 선택 시뮬레이터</h1>
+    <p><a href="https://github.com/Quasar-Kim/evolove">깃허브</a></p>
+
+    <h3>이게 뭔가요?</h3>
+    <p>
+      이 시뮬레이터는 <em>피식자</em>와 <em>포식자</em>가 상호 작용을 통해 진화하는 모습을 보여줍니다.
+      (한 <a href="https://gall.dcinside.com/board/view/?id=hit&no=15053">인터넷 게시물</a>에 나온걸 웹으로 구현했어요.)
+    </p>
+    <p>
+    룰은 다음과 같아요.
+    </p>
+    <ul>
+      <li>피식자와 포식자는 모두 무작위로 돌아다녀요.</li>
+      <li>바닥에는 매 틱(프레임)마다 음식이 두개씩 소환되요. 피식자는 돌아다니면서 음식을 먹어요.</li>
+      <li>포식자는 돌아다니면서 피식자를 먹어요.</li>
+      <li>피식자와 포식자 모두 300틱(대략 10초)동안 먹이를 먹지 못하면 굶어 죽어요.</li>
+      <li>포식자와 피식자 모두 설정된 만큼 이상의 먹이를 먹으면 두 마리로 분열해요.</li>
+      <li>분열할때는 각 특성이 30% 확률로 변이할 수 있어요. 변이시 각 형질은 정규분포에 따라서 새롭게 결정되요.(분산은 소스 코드 참조)</li>
+    </ul>
+    <p>
+      팁: 시작 전 ctrl을 누르고 마우스 휠을 돌려 배율을 조정해보세요. 배율을 낮추면 서식지가 커집니다.
+    </p>
+
+    <h3>주의!</h3>
+    <p>
+      이 시뮬레이터는 <em>최소 크롬 89 이상 또는 import map을 지원하는 브라우저</em>를 필요로 합니다.
+    </p>
+
+    <h3>설정 (<a href="https://github.com/Quasar-Kim/evolove#특성들">참조</a>)</h3>
+    <p>
+
+    </p>
+    <form id="setting">
+      <div class="setting-inputs">
+        <section>
+          <label for="predatorFissionOn">포식자 분열에 필요한 먹이 개수</label>
+          <p>
+            <input type="number" name="predatorFissionOn" id="predatorFissionOn" value="30">
+          </p>
+
+          <label for="predatorCount">포식자 초기 개체수</label>  
+          <p>
+            <input type="number" name="predatorCount" id="predatorCount" value="5">
+          </p>
+
+          <label for="predatorProps">포식자 초기 설정(JSON)</label>  
+          <p>
+            <textarea name="predatorProps" id="predatorProps" cols="30" rows="10">
+{
+  "width": 50,
+  "height": 20,
+  "velocity": [5.73, 3.99],
+  "bodyAngle": 1.04,
+  "activity": 0.05
+}
+            </textarea>
+          </p>
+        </section>
+  
+        <section>
+          <label for="preyFissionOn">피식자 분열에 필요한 먹이 개수</label>  
+          <p>
+            <input type="number" name="preyFissionOn" id="preyFissionOn" value="5">
+          </p>
+
+          <label for="preyCount">피식자 초기 개체수</label>  
+          <p>
+            <input type="number" name="preyCount" id="preyCount" value="100">
+          </p>
+
+          <label for="preyProps">피식자 초기 설정(JSON)</label>  
+          <p>
+            <textarea name="preyProps" id="preyProps" cols="30" rows="10">
+{
+  "width": 20,
+  "height": 20,
+  "velocity": [0.86, 0.49],
+  "bodyAngle": 0.44,
+  "activity": 0.5
+}
+            </textarea>
+          </p>
+        </section>
+      </div>
+
+      <input type="submit" value="시작하기!" id="submitButton">
+    </form>
+  </div>
+</elix-dialog>
+
+<!-- 통계 패널 -->
+<section class="left-panel" hidden>
+  <h2>컨트롤</h2>
+  <button id="startButton">시작</button>
+  <button id="resumeButton">정지</button>
+
+  <h2>통계</h2>
+  <canvas id="populationChart" width="300" height="300"></canvas>
+  <p>
+    <button id="downloadStats">통계 데이터 다운로드</button>
+  </p>
+</section>
+
+<!-- 렌더링용 캔버스 -->
+<canvas width="5000" height="5000" id="renderer"></canvas>
+
+<!-- 메인 스크립트 -->
+<script src="./index.js" type="module"></script>
+</body>
+</html>

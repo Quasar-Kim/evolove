@@ -28,13 +28,13 @@ function mutateBig (key, val) {
   switch (key) {
     case 'height':
     case 'width': {
-      return mutateInRange(val, 50, 1, 1000)
+      return mutateInRange(val, 500, 1, 1000)
     }
     case 'velocity': {
-      return val.map(i => mutateInRange(i, 25, 0.5, 150))
+      return val.map(i => mutateInRange(i, 100, 0.5, 150))
     }
     case 'activity': {
-      return mutateInRange(val, 0.1, 0.00001, 1)
+      return mutateInRange(val, 1, 0.00001, 1)
     }
   }
 }
@@ -57,12 +57,17 @@ export default function mutate (props) {
   for (const [key, val] of Object.entries(props)) {
     const p = random(0, 1, true)
 
-    if (p <= 0.05) {
-      mutated[key] = mutateBig(key, val)
-      console.log(`mutate big on prop ${key}: ${val} => ${mutated[key]}`)
-    } else if (p <= 0.2) {
+    // if (p <= 0.1) {
+    //   mutated[key] = mutateBig(key, val)
+    //   // console.log(`mutate big on prop ${key}: ${val} => ${mutated[key]}`)
+    // } else if (p <= 0.5) {
+    //   mutated[key] = mutateSmall(key, val)
+    //   // console.log(`mutate small on prop ${key}: ${val} => ${mutated[key]}`)
+    // } else {
+    //   mutated[key] = val
+    // }
+    if (p <= 0.3) {
       mutated[key] = mutateSmall(key, val)
-      console.log(`mutate small on prop ${key}: ${val} => ${mutated[key]}`)
     } else {
       mutated[key] = val
     }

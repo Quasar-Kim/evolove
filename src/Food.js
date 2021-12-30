@@ -16,4 +16,10 @@ export default class Food extends Entity {
       velocity: [0, 0]
     })
   }
+
+  draw (ctx) {
+    ctx.strokeStyle = 'brown'
+    super.draw(ctx)
+    ctx.strokeStyle = 'blue'
+  }
 }

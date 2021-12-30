@@ -58,12 +58,21 @@ body {
   left: 0;
   top: 0;
 }
+
+#overlay {
+  background: white;
+  position: absolute;
+  right: 1em;
+  top: 1em;
+}
   </style>
 
-<!-- https://generator.jspm.io/#FcgxDoAgDADADu6+hMaiiSuf8AHENoBBSGxd3P238cZ7B4Bh3JoVq8LAYrKb23utRUtvGmYknKF2jpqdaFiQVvQEZ7R8aKAJJyRoncU9JaX7ihb+8x/quXENWgA -->
+<!-- https://generator.jspm.io/#XYwxDsIwDEU9IHGamLgFdc0lOICVGBIUEql2WZm4N+na8b/39H8ngPP33qxYlQQx82r40jDjgv4wL7xZhyQm0VzstRYtve2ScIZHqeKUP7KGCT3e4MmbauEWCAeA2hNrdqLhirTgRPBmy+Ob/MjpD/fvYNaJAA -->
   <script type="importmap">
     {
       "imports": {
+        "chart.js": "https://ga.jspm.io/npm:chart.js@3.7.0/dist/chart.esm.js",
+        "chart.js/auto": "https://ga.jspm.io/npm:chart.js@3.7.0/auto/auto.esm.js",
         "detect-collisions": "https://ga.jspm.io/npm:detect-collisions@3.1.3/dist/index.js",
         "gaussian": "https://ga.jspm.io/npm:gaussian@1.2.0/lib/gaussian.js",
         "lodash-es": "https://ga.jspm.io/npm:lodash-es@4.17.21/lodash.js",
@@ -92,6 +101,11 @@ body {
 <body>
   <!-- collision body renderer -->
 <canvas id="collisionBodies" width="10000" height="10000"></canvas>
+<elix-overlay id="overlay">
+  <button id="openPip">통계 열기</button>
+</elix-overlay>
+
+<script src="https://esm.run/elix/define/Overlay.js" type="module"></script>
 <script src="honey-moon-went-wrong.js" type="module"></script>
 </body>
 </html>

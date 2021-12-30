@@ -52,9 +52,16 @@ export default class Engine {
     this.ctx = canvas.getContext('2d')
 
     /**
+     * 처리된 tick 수
+     */
+    this.tickCount = 0
+
+    /**
      * Tick당 호출할 함수들
      */
     this.tickFunctions = new Set()
+
+    this.paused = false
 
     // 캔버스 설정 - 팬 색
     this.ctx.strokeStyle = 'blue'
@@ -94,6 +101,9 @@ export default class Engine {
   }
 
   _tick () {
+    if (this.paused) return
+    this.tickCount++
+
     for (const fn of this.tickFunctions) {
       fn(this)
     }
@@ -128,9 +138,11 @@ export default class Engine {
 
   start () {
     this.handle = requestAnimationFrame(this._tick.bind(this))
+    this.paused = false
   }
 
   stop () {
     cancelAnimationFrame(this.handle)
+    this.paused = true
   }
 }
